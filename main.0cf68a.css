@@ -1003,11 +1003,11 @@ body {
 }
 
 .article-entry .highlight,.article-entry pre {
-	background: #272822;
+	background: #f8f8f8;
 	margin: 10px 0;
 	padding: 10px;
 	overflow: auto;
-	color: #fff;
+	color: #000;
 	font-size: .9em;
 	line-height: 22.400000000000002px
 }
@@ -1030,7 +1030,7 @@ body {
 	background: none;
 	text-shadow: none;
 	padding: 0;
-	color: #fff
+	color: #333
 }
 
 .article-entry .highlight {
