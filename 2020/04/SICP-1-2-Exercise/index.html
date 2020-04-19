@@ -5,25 +5,30 @@
   
   <meta name="google-site-verification" content="lZCwPuaC3BlABdFivfV3kbwDmQmaMCueMZVT36dZ2FA">
   
-  <meta name="robots" content="noindex">
-  <!--You have Brocaproof(Permanents with Brocaproof can't be the target of spells or abilities Broca control).-->
-  
   <meta name="theme-color" content="#dd3333">
   <link rel="stylesheet" href="/hljs.css">
+  
+  <script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+  <script src="//cdn.bootcss.com/highlight.js/9.1.0/languages/scheme.min.js"></script>
   
   <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2020/4 | Hanashiro&#39;s HolloWorld</title>
+  <title>SICP 1-2 Exercise | SICP第一章第二节习题 | Hanashiro&#39;s HolloWorld</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hanashiro&#39;s HolloWorld">
-<meta property="og:url" content="http://yoursite.com/archives/2020/04/index.html">
+  <meta name="description" content="花白的SICP之旅（2）">
+<meta name="keywords" content="计算机">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SICP 1-2 Exercise | SICP第一章第二节习题">
+<meta property="og:url" content="http://yoursite.com/2020/04/SICP-1-2-Exercise/index.html">
 <meta property="og:site_name" content="Hanashiro&#39;s HolloWorld">
+<meta property="og:description" content="花白的SICP之旅（2）">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-04-19T07:31:22.505Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hanashiro&#39;s HolloWorld">
+<meta name="twitter:title" content="SICP 1-2 Exercise | SICP第一章第二节习题">
+<meta name="twitter:description" content="花白的SICP之旅（2）">
   
     <link rel="alternative" href="/atom.xml" title="Hanashiro&#39;s HolloWorld" type="application/atom+xml">
   
@@ -141,36 +146,114 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-SICP-1-2-Exercise" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      SICP 1-2 Exercise | SICP第一章第二节习题
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/04/SICP-1-2-Exercise/" class="archive-article-date">
+
+        
+        <a href="/2020/04/SICP-1-2-Exercise/" class="archive-article-date">
   	<time datetime="2020-04-19T06:57:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-04-19</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/04/SICP-1-2-Exercise/">SICP 1-2 Exercise | SICP第一章第二节习题</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>花白的SICP之旅（2）</p>
+</blockquote>
+<a id="more"></a>
+<p>1.9<br>下面这两个过程各定义了一种加法，它们基于过程inc（它将参数加1）和dec（它将参数减1）</p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
 
-        <div class="article-info info-on-right">
-          
+<pre><code class="scheme">(define (+1 a b)
+  (if (= a 0)
+      b
+      (inc (+1 (dec a) b))))
+(define (+2 a b)
+  (if (= a 0)
+      b
+      (+2 (dec a) (inc b))))
+</code></pre>
+<p><strong>请用代换模型展示这两个过程在求值(+ 4 5)时所产生的计算过程。这些计算过程是递归的/迭代的吗？</strong><br><em>第一个过程是这样的，是线性递归计算过程</em><br><em>计算过程中有“伸展”和“收缩”的过程，且伸展过程所需要的计算量和存储空间都和参数有关</em></p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">(+ 4 5)
+(inc (+ 3 5))
+(inc (inc (+ 2 5)))
+(inc (inc (inc (+ 1 5))))
+(inc (inc (inc (inc (+ 0 5)))))
+(inc (inc (inc (inc 5))))
+(inc (inc (inc 6)))
+(inc (inc 7))
+(inc 8)
+9
+</code></pre>
+<p><em>第二个过程是这样的，是线性迭代计算过程</em><br><em>计算过程中没有上述过程，需要的存储空间是常数项，计算量和参数有关</em></p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">(+ 4 5)
+(+ 3 6)
+(+ 2 7)
+(+ 1 8)
+(+ 0 9)
+9
+</code></pre>
+<p>1.10<br>下面这个过程计算一个称为Ackermann函数的数学函数：</p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">(define (A x y)
+  (cond ((= y 0) 0)
+        ((= x 0) (* 2 y))
+        ((= y 1) 2)
+        (else (A (- x 1)
+                 (A x (- y 1))))))
+</code></pre>
+<p><strong>请求(A 1 10)(A 2 4)(A 3 3)，并给出下面的过程对给定整数值n所计算的函数的数学定义</strong></p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">(define (f n) (A 0 n))
+(define (g n) (A 1 n))
+(define (h n) (A 2 n))
+</code></pre>
+<p><em>(A 1 10)、(A 2 4)和(A 3 3)过程如下：</em></p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">&gt;(A 1 10)
+(A 0 (A 1 9))
+(A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 1 1))))))))))
+(A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 (A 0 2)))))))))
+1024
+&gt;(A 2 4)
+(A 1 (A 2 3))
+(A 1 (A 1 (A 1 (A 2 1))))
+(A 1 (A 1 (A 1 2)))
+(A 1 (A 1 (A 0 (A 1 1))))
+(A 1 (A 1 4))
+(A 1 16)
+65536
+&gt;(A 3 3)
+(A 2 (A 3 2))
+(A 2 (A 2 (A 3 1)))
+(A 2 (A 2 2))
+65536
+</code></pre>
+<p><em>(f n)=2n，(g n)=2^n，(h n)=2^(2^n))。</em></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -182,57 +265,106 @@
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/04/SICP-1-2-Exercise/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/04/SICP-1-1-Exercise/" class="archive-article-date">
-  	<time datetime="2020-04-14T15:09:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-04-14</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2020/04/SICP-1-1-Exercise/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">SICP 1-1 Exercise | SICP第一章第一节习题</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/04/SICP-1-1-Exercise/">SICP 1-1 Exercise | SICP第一章第一节习题</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">计算机</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
   
 
-    
+  
+
+  
 
 
           </div>
@@ -255,8 +387,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

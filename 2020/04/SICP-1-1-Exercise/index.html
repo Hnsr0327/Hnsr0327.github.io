@@ -25,7 +25,7 @@
 <meta property="og:site_name" content="Hanashiro&#39;s HolloWorld">
 <meta property="og:description" content="花白的SICP之旅（1）">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-04-15T12:24:36.819Z">
+<meta property="og:updated_time" content="2020-04-19T01:27:16.544Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SICP 1-1 Exercise | SICP第一章第一节习题">
 <meta name="twitter:description" content="花白的SICP之旅（1）">
@@ -209,10 +209,10 @@
 <p>而且看起来很好用：</p>
 <p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
 
-<pre><code class="scheme">(new-if (= 2 3) 0 5)
-输出：5
-(new-if (= 1 1) 0 5)
-输出：0
+<pre><code class="scheme">&gt;(new-if (= 2 3) 0 5)
+5
+&gt;(new-if (= 1 1) 0 5)
+0
 </code></pre>
 <p>她重写了求平方根的过程，如果用这个过程去算平方根，会发生什么事情呢？</p>
 <p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
@@ -224,7 +224,65 @@
                        x)))
 </code></pre>
 <p><em>会Stack Overflow</em><br><em>Scheme的解释器是应用序求值，这意味着调用“new-if”时，它会试图先计算它的参数。</em><br><em>在最后一个过程中，sqrt-iter过程会先计算(good-enough? guess x)、guess和(sqrt-iter (improve guess x) x)，它带头调用了它自己！</em></p>
-<p>1.7</p>
+<p>1.7<br>容易知道下面确定平方根是否“足够好”的过程无法确定很小的数的平方根；在现实的计算机里，算术运算并不是无限精度，这使得该过程同样无法确定很大的数的平方根。</p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">(define (good-enough? guess x)
+  (&lt; (abs (- (square guess) x)) 0.001))
+</code></pre>
+<p><strong>请解释上述论断，并举例说明之。</strong><br>有另一种检测方式，就是监视猜测值和猜测值的迭代的变化情况。<br><strong>请设计一个采用这种测试方式的平方根过程，并确认是否有题干中过程的缺陷。</strong></p>
+<p><em>以下是一个使用题干过程的sqrt过程</em></p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">(define (avg x y)(/ (+ x y) 2))
+(define (sqrt-1 x)
+  (define (improve guess x)
+    (avg guess (/ x guess)))
+  (define (good-enough? guess x)
+    (&lt; (abs (- (* guess guess) x)) 0.001))
+  (define (sqrt-iter guess x)
+    (if (good-enough? guess x)
+        guess
+        (sqrt-iter (improve guess x) x)))
+  (sqrt-iter 1.0 x))
+&gt;(sqrt 0.0001)
+0.03230844833048122
+&gt;(sqrt 1000000000)
+死循环
+</code></pre>
+<p><em>以下是采用新方式的sqrt过程</em></p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">(define (improve guess x)
+  (/ (+ guess (/ x guess)) 2))
+(define (sqrt-2 x)
+  (define (good-enough?  guess1 guess2)
+    (&lt; (/ (abs (-  guess1 guess2)) guess2) (/ 0.001 guess2)))
+  (define (sqrt-iter guess1 guess2 x)
+    (if (good-enough? guess1 guess2) guess2
+        (sqrt-iter guess2 (/ (+ guess2 (/ x guess2)) 2) x)))
+  (sqrt-iter 0.0 1.0 x))
+&gt;(sqrt 0.0001)
+0.010000714038711746
+&gt;(sqrt 1000000000)
+31622.776601683792
+</code></pre>
+<p>1.8<br>立方根的牛顿法是这样的：如果y是x的立方根近似值，那么(x/y^2+2*y)/3是一个更好的立方根近似值，请整一个cube-iter。</p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">(define (improve y x)
+  (/ (+ (/ x (* y y)) (* 2 y)) 3))
+(define (good-enough? guess1 guess2)
+  (&lt; (/ (abs (- guess2 guess1)) guess1) 0.001))
+(define (cube-iter guess x)
+  (if (good-enough? guess (improve guess x))
+      guess
+      (cube-iter (improve guess x) x)))
+(define (cube x)
+  (cube-iter 1.0 x))
+&gt;(cube 27)
+3.001274408
+</code></pre>
 
       
 
@@ -307,6 +365,15 @@
 
   
 <nav id="article-nav">
+  
+    <a href="/2020/04/SICP-1-2-Exercise/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          SICP 1-2 Exercise | SICP第一章第二节习题
+        
+      </div>
+    </a>
   
   
     <a href="/2020/02/20-Feb-20/" id="article-nav-older" class="article-nav-link-wrap">
@@ -436,19 +503,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">邢嘉和|Broca-Phenol</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">人物剪影</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">杂事</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">往事</a>
+                <a href="javascript:void(0)" class="js-tag color5">个人简介</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -456,7 +515,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">个人简介</a>
+                <a href="javascript:void(0)" class="js-tag color3">往事</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">邢嘉和|Broca-Phenol</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">人物剪影</a>
               </li>
             
             <div class="clearfix"></div>
