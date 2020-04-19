@@ -25,7 +25,7 @@
 <meta property="og:site_name" content="Hanashiro&#39;s HolloWorld">
 <meta property="og:description" content="花白的SICP之旅（2）">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-04-19T07:31:22.505Z">
+<meta property="og:updated_time" content="2020-04-19T11:33:22.265Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SICP 1-2 Exercise | SICP第一章第二节习题">
 <meta name="twitter:description" content="花白的SICP之旅（2）">
@@ -182,7 +182,7 @@
       b
       (+2 (dec a) (inc b))))
 </code></pre>
-<p><strong>请用代换模型展示这两个过程在求值(+ 4 5)时所产生的计算过程。这些计算过程是递归的/迭代的吗？</strong><br><em>第一个过程是这样的，是线性递归计算过程</em><br><em>计算过程中有“伸展”和“收缩”的过程，且伸展过程所需要的计算量和存储空间都和参数有关</em></p>
+<p><strong>请用代换模型展示这两个过程在求值(+ 4 5)时所产生的计算过程。这些计算过程是递归的/迭代的吗？</strong><br><em>第一个过程是这样的，是递归计算过程</em><br><em>计算过程中有“伸展”和“收缩”的过程，且伸展过程所需要的计算量和存储空间都和参数有关</em></p>
 <p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
 
 <pre><code class="scheme">(+ 4 5)
@@ -196,7 +196,7 @@
 (inc 8)
 9
 </code></pre>
-<p><em>第二个过程是这样的，是线性迭代计算过程</em><br><em>计算过程中没有上述过程，需要的存储空间是常数项，计算量和参数有关</em></p>
+<p><em>第二个过程是这样的，是迭代计算过程</em><br><em>计算过程中没有上述过程，需要的存储空间是常数项，计算量和参数有关</em></p>
 <p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
 
 <pre><code class="scheme">(+ 4 5)
@@ -245,7 +245,43 @@
 (A 2 (A 2 2))
 65536
 </code></pre>
-<p><em>(f n)=2n，(g n)=2^n，(h n)=2^(2^n))。</em></p>
+<p><em>(f n)=2\</em>n，(g n)=2^n，(h n)=2^(2^n))。*</p>
+<p>1.11<br>函数f由如下规则定义：如果n&lt;3，f(n)=n；否则f(n)=f(n-1)+2*f(n-2)+3*f(n-3)<br><strong>请分别采用递归计算过程和迭代计算过程写计算f(n)的过程。</strong><br><em>递归计算过程</em></p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">(define (f x)
+  (cond ((&lt; x 3) x)
+        (else (+ (f (- x 1)) (* 2 (f (- x 2))) (* 3 (f (- x 3)))))))
+</code></pre>
+<p><em>迭代计算过程</em></p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">(define (g x3 x2 x1)
+  (+ x3 (* 2 x2) (* 3 x1)))
+(define (f x)
+  (define (f-iter x1 x2 x3 count mx)
+    (cond ((&lt; mx 3) mx)
+          ((&lt; count mx) (f-iter x2 x3 (g x3 x2 x1) (inc count) mx))
+          ((= count mx) x2)
+          ))
+  (f-iter 1 2 4 2 x))
+</code></pre>
+<p>1.12<br><strong>已知有一个杨辉三角，请写一个计算杨辉三角的元素的递归计算过程。</strong></p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">(define (pas row col)
+  (define (fac x)
+    (define (fac-w output count mx)
+      (if (&gt; count mx) 
+          output
+          (fac-w (* count output) (inc count) mx)))
+    (fac-w 1 1 x))
+  (define r (dec row))
+  (define c (dec col))
+  (if (or (&gt; col row) (&lt; col 0)) 0 (/ (fac r) (* (fac c) (fac (- r c)))))
+  )
+</code></pre>
+<p>1.13<br>证明Fib(n)（斐波那契数列的第n项）是最接近((sqrt(5)+1)/2)^n/sqrt(5)的整数。<br>提示：先用数学归纳法证明Fib(n)=(((sqrt(5)+1)/2)^2-((sqrt(5)-1)/2)^2)/sqrt(5)</p>
 
       
 
@@ -457,11 +493,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">杂事</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">计算机</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">个人简介</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">杂事</a>
+                <a href="javascript:void(0)" class="js-tag color3">往事</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -470,14 +514,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">人物剪影</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">计算机</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">往事</a>
               </li>
             
             <div class="clearfix"></div>
