@@ -25,7 +25,7 @@
 <meta property="og:site_name" content="Hanashiro&#39;s HolloWorld">
 <meta property="og:description" content="花白的SICP之旅（2）">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-04-22T04:10:10.524Z">
+<meta property="og:updated_time" content="2020-04-22T05:13:14.260Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SICP 1-2 Exercise | SICP第一章第二节习题">
 <meta name="twitter:description" content="花白的SICP之旅（2）">
@@ -281,8 +281,35 @@
   (if (or (&gt; col row) (&lt; col 0)) 0 (/ (fac r) (* (fac c) (fac (- r c)))))
   )
 </code></pre>
-<p>1.13<br><strong>证明Fib(n)（斐波那契数列的第n项）是最接近((sqrt(5)+1)/2)^n/sqrt(5)的整数。*</strong><br>提示：先用数学归纳法证明Fib(n)=(((sqrt(5)+1)/2)^2-((sqrt(5)-1)/2)^2)/sqrt(5)</p>
+<p>1.13<br><strong>证明Fib(n)（斐波那契数列的第n项）是最接近((sqrt(5)+1)/2)^n/sqrt(5)的整数。</strong><br>提示：先用数学归纳法证明Fib(n)=(((sqrt(5)+1)/2)^2-((sqrt(5)-1)/2)^2)/sqrt(5)</p>
 <p><em><a href="https://hnsr0327.me/pictures/SICP-1-13-Fib.jpg" target="_blank" rel="noopener">解图</a></em></p>
+<p>1.14<br>已知一个“给定任意钱数，给出将其换成(50/25/10/5/1)元的组合方式个数”的过程</p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">(define (count-change amount)
+  (define (value kind-of-coins)
+    (cond ((= kind-of-coins 5) 50)
+          ((= kind-of-coins 4) 25)
+          ((= kind-of-coins 3) 10)
+          ((= kind-of-coins 2) 5)
+          ((= kind-of-coins 1) 1)
+          )
+    )
+  (define (cc amount kind-of-coins)
+    (cond ((= amount 0) 1)
+          ((or (&lt; amount 0) (= kind-of-coins 0)) 0)
+          (else (+ (cc amount (dec kind-of-coins))
+                   (cc (- amount (value kind-of-coins)) kind-of-coins)
+                 ))
+          )
+    )
+  (cc amount 5))
+&gt;(count-change 400)
+26517
+</code></pre>
+<p><strong>请以树的形式画出“count-change过程在将11元换成硬币时产生的计算过程”</strong><br><strong>这个计算过程的空间和步数增长的阶各是什么？</strong></p>
+<p><em><a href="https://hnsr0327.me/pictures/SICP-1-14-CC.jpg" target="_blank" rel="noopener">计算过程图</a></em><br>空间的最大使用量即是树的最大层数，此处层数的快速增长来自(n 1)-&gt;(n 0)+(n-1 1)，很明显空间增长的阶为Θ(n)<br>考察(cc amount x)中x参数对时间复杂度的影响：<br>当x=1时，计算量约为amount*2，此时为Θ(n)；<br>当x=2时，(cc amount 2)会“分裂”成(cc amount 1)和(cc amount-5 2)，也就是说x=2的增长速度相比x=1多了amount倍；<br>当x=3时，(cc amount 3)同样会“分裂”，我们会发现x=n+1的步数增长是x=n的amount倍；<br>即题干中(count-change amount)即(cc amount 5)的步数增长阶为Θ(n^5)。<br><em>但是在比较小的“找零”中，增长阶并没有达到Θ(n^5)</em></p>
+<p>1.15</p>
 
       
 
@@ -494,6 +521,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">个人简介</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">杂事</a>
               </li>
              
@@ -507,10 +538,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">计算机</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">个人简介</a>
               </li>
              
               <li class="article-tag-list-item">
