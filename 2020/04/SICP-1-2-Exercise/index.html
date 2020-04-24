@@ -25,7 +25,7 @@
 <meta property="og:site_name" content="Hanashiro&#39;s HolloWorld">
 <meta property="og:description" content="花白的SICP之旅（2）">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-04-22T05:31:00.104Z">
+<meta property="og:updated_time" content="2020-04-24T09:16:42.877Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SICP 1-2 Exercise | SICP第一章第二节习题">
 <meta name="twitter:description" content="花白的SICP之旅（2）">
@@ -321,6 +321,122 @@
 </code></pre>
 <p><strong>请问：</strong><br>a)在求值(sine 12.15)时，p调用了多少次？<br>b)在求值(sine a)时，由过程sine所产生的计算过程使用的空间和步数（作为a的函数）增长的阶是什么？</p>
 <p>a)12.15-&gt;4.05-&gt;1.35-&gt;0.45-&gt;0.15-&gt;0.05，即p调用了5次；<br>b)易得参数(a)每增长到原来的3倍，递归深度加一，即增长的阶为Θ(logn)。</p>
+<p>1.16<br><strong>请定义一个过程，它能产生出一个“按照迭代方式，使用一系列求平方，就像只用对数个步骤的fast-expt”的求幂计算过程。</strong></p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">(define (fast-expt a n)
+  (define (square x)
+    (* x x))
+  (define (even? n)
+    (= (remainder n 2) 0))
+  (cond ((= n 0) 1)
+        ((even? n) (square (fast-expt a (/ n 2))))
+        (else (* a (fast-expt a (- n 1))))))
+</code></pre>
+<p>提示Ⅰ：请利用好关系(a^(n/2))^2=(a^2)^(n/2)，除了指数n和基数a以外，还应维持一个附加的状态变量b，定义好状态变换，使得状态转移时b*a^n不变。计算开始时b=1，结束时输出b。<br>提示Ⅱ：“定义一个<em>不变量</em>，要求它在状态间保持不变”是思考迭代算法设计问题时的强力方法。</p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">(define (iter-expt a n)
+  (define (square x)
+    (* x x))
+  (define (even? n)
+    (= (remainder n 2) 0))
+  (define (expt a n b)
+    (cond ((= n 0) b)
+          ((even? n) (expt (square a) (/ n 2) b))
+          ((not (even? n)) (expt a (- n 1) (* b a)))
+          )
+    )
+  (expt a n 1))
+</code></pre>
+<p>1.17<br>本节（1.2.4 求幂）的求幂算法的基础是通过反复做乘法求乘幂。类似的是，我们可以通过反复加法的方式求出乘积。下面的乘积过程与expt过程类似（假定该语言没有乘法）：</p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">(define (expt b n)
+  (if (= n 0)
+      1
+      (* b (expt b (- n 1)))))
+(define (multi a b)
+  (if (= b 0)
+      0
+      (+ a (multi a (- b 1)))))
+</code></pre>
+<p>该算法的计算量相对于b是线性的，假定有过程double（它将参数乘以2）和halve（它将偶数参数除以2），<strong>请用+、-、double和halve设计类似1.16的求乘积过程。</strong></p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">(define (multi a b)
+  (define (double n)
+    (+ n n))
+  (define (halve n)
+    (/ n 2))
+  (define (even? n)
+    (= (remainder n 2) 0))
+  (cond ((= b 1) a);a*1=a
+        ((even? b) (multi (double a) (halve b)));a*b=(a*2)*(b/2)
+        (else (+ (multi a (- b 1)) a));a*b=a*(b-1)+a
+        )
+  )
+</code></pre>
+<p>1.18<br><strong>请用1.16和1.17的结果，限定（+、-、double、halve），用对数步数求出两个数的乘积</strong><br><em>（注：此处应是用迭代过程重写1.17过程）</em></p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">(define (iter-multi a b)
+  (define (double n)
+    (+ n n))
+  (define (halve n)
+    (/ n 2))
+  (define (even? n)
+    (= (remainder n 2) 0))
+  (define (multi a b u)
+    (cond ((= b 0) u)
+          ((even? b) (multi (double a) (halve b) u))
+          (else (multi a (- b 1) (+ u a)))))
+  (multi a b 0))
+</code></pre>
+<p>1.19<br>存在一种对数步数求Fib(n)的巧妙算法。<br>我们已经知道旧fib-iter过程中a和b的变换规则为a←a+b和b←a，我们现在管这个变换叫<em>T</em>变换。<br>通过观察可以发现，从(a,b)=(1,0)开始做N次<em>T</em>变换，可以得到(a,b)=(Fib(n+1),Fib(n))，换言之斐波那契数可以通过应用于(1,0)的<em>T</em>^n（<em>T</em>变换的n次方）来求得。现在我们重新定义<em>T</em>变换是变换族<em>Tpq</em>的特别种（p=0,q=1），<em>Tpq</em>是(a,b)→(bq+aq+ap,bp+aq)的变换。<br><strong>(a)请证明：如果应用变换<em>Tpq</em>两次，效果相当于应用同样形式的一次变换<em>Tp’q’</em>，其中的p’和q’可以算出来；<br>(b)这指明了求出该变换的平方的路径，我们可以通过连续求平方的方式计算<em>T</em>^n。将1.16~1.18集合在一起，我们可以写出下面的“对数求出Fib(n)”的过程。请补全该过程</strong></p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">(define (fib-old n)
+  (define (fib-iter a b count)
+    (if (= count 0)
+        b
+        (fib-iter (+ a b) a (- count 1))))
+  (fib-iter 1 0 n))
+(define (fib n)
+  (define (fib-iter a b p q count)
+    (cond ((= count 0) b)
+          ((even? count)
+           (fib-iter a
+                     b
+                     ??FILL-THIS-IN?? ; compute p&#39;
+                     ??FILL-THIS-IN?? ; compute q&#39;
+                     (/ count 2)))
+          (else (fib-iter (+ (* b q) (* a q) (* a p))
+                          (+ (* b p) (* a q))
+                          p
+                          q
+                          (- count 1)))))
+  (fib-iter 1 0 0 1 n))
+</code></pre>
+<p>(a)(a,b)→两次<em>Tpq</em>变换→(2bpq+2apq+2aq^2+bq^2+ap^2,2apq+aq^2+bq^2+bp^2)=(bq’+aq’+ap’,bp’+aq’)，观察得p’=p^2+q^2,q’=q^2+2pq。<br>(b)我们现在可以用这个方法了——n是偶数时，求一次变换的平方并减半n，n是奇数时，运用一次变换并减少n。</p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">(define (fib-ultra n)
+  (define (fib-iter a b p q count)
+    (cond ((= count 0) b)
+          ((even? count)
+           (fib-iter a
+                     b
+                     (+ (* p p) (* q q)) ; compute p&#39;
+                     (+ (* q q) (* 2 (* p q))) ; compute q&#39;
+                     (/ count 2)))
+          (else (fib-iter (+ (* b q) (* a q) (* a p))
+                          (+ (* b p) (* a q))
+                          p
+                          q
+                          (- count 1)))))
+  (fib-iter 1 0 0 1 n))
+</code></pre>
 
       
 
