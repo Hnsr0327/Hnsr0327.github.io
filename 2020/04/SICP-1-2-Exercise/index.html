@@ -25,7 +25,7 @@
 <meta property="og:site_name" content="Hanashiro&#39;s HolloWorld">
 <meta property="og:description" content="花白的SICP之旅（2）">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-04-24T09:16:42.877Z">
+<meta property="og:updated_time" content="2020-04-25T07:21:02.731Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SICP 1-2 Exercise | SICP第一章第二节习题">
 <meta name="twitter:description" content="花白的SICP之旅（2）">
@@ -437,6 +437,182 @@
                           (- count 1)))))
   (fib-iter 1 0 0 1 n))
 </code></pre>
+<p>1.20<br>一个过程所产生的计算过程当然依赖于解释器所使用的规则。考虑这个迭代式gcd过程：</p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">(define (gcd a b)
+  (if (= b 0)
+      a
+      (gcd b (remainder a b))))
+</code></pre>
+<p>假定解释器用书上1.1.5节的正则序（完全展开再归约）解释这一过程（if的求值规则总是“谓词部分先行求值，根据结果再确定随后求的是哪个子表达式”）。<br><strong>请采用正则序的代换方法，展示(gcd 206 40)的计算过程，并指明实际执行的remainder运算。其中实际执行了多少次remainder运算？如果采用应用序（先求值参数再应用）求值呢？</strong></p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">&gt;(gcd 206 40);正则序
+(gcd 40 (remainder 206 40));(gcd 40 6)
+(if (= (remainder 206 40) 0) 40 (gcd (remainder 206 40) (remainder 40 (remainder 206 40))));1次
+(gcd (remainder 206 40) (remainder 40 (remainder 206 40)));(gcd 6 4)
+(if (= (remainder 40 (remainder 206 40)) 0) (remainder 206 40) (gcd (remainder 40 (remainder 206 40)) (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))));2次
+(gcd (remainder 40 (remainder 206 40)) (remainder (remainder 206 40) (remainder 40 (remainder 206 40))));(gcd 4 2)
+(if (= (remainder (remainder 206 40) (remainder 40 (remainder 206 40))) 0) (remainder 40 (remainder 206 40)) (gcd (remainder (remainder 206 40) (remainder 40 (remainder 206 40))) (remainder (remainder 40 (remainder 206 40)) (remainder (remainder 206 40) (remainder 40 (remainder 206 40))))));4次
+(gcd (remainder (remainder 206 40) (remainder 40 (remainder 206 40))) (remainder (remainder 40 (remainder 206 40)) (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))));(gcd 2 0)
+(if (= (remainder (remainder 40 (remainder 206 40)) (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))) 0) (remainder (remainder 206 40) (remainder 40 (remainder 206 40))) ......));7次
+(remainder (remainder 206 40) (remainder 40 (remainder 206 40)));4次
+2;总共18次，实际执行的部分有if部分先行求值的14次和最后结果的4次
+&gt;(gcd 206 40);应用序
+(gcd 40 6);1次
+(gcd 6 4);1次
+(gcd 4 2);1次
+(gcd 2 0);1次
+(if (= 0 0) 2 (gcd 0 (remainder 2 0)))
+2;总共4次
+</code></pre>
+<p>1.21<br><strong>用smallest-divisor过程找出下面各数的最小因子：199、1999、19999</strong></p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">(define (prime? n)
+  (define (smallest-divisor n)
+    (define (divides? a b)
+      (= (remainder b a) 0))
+    (define (find-divisor n test-divisor)
+      (cond ((&gt; (square test-divisor) n) n)
+            ((divides? test-divisor n) test-divisor)
+            (else (find-divisor n (+ test-divisor 1)))))
+    (find-divisor n 2))
+  (= n (smallest-divisor n)))
+</code></pre>
+<p><em>略（199、1999、7）</em></p>
+<p>1.22<br>大部分Lisp实现都包含一个runtime基本过程，调用它将返回一个整数，表示系统已经运行的时间。<br>对整数n调用下面的timed-prime-test过程时将打印出n并检查n是否为素数。如果n是素数，过程将打印出三个星号和“执行这一检查所用的时间量”。</p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">(define (timed-prime-test n)
+  (newline)
+  (display n)
+  (start-prime-test n (runtime)))
+(define (start-prime-test n start-time)
+  (if (prime? n)
+      (report-prime (- (runtime) start-time))))
+(define (report-prime elapsed-time)
+  (display &quot; *** &quot;)
+  (display elapsed-time))
+</code></pre>
+<p><strong>请利用这一过程写一个search-for-primes过程，它检查给定范围内连续的各个奇数的素性。<br>请用你写的过程找出大于百/千/万/十万亿的三个最小的素数，并注意其中检查每个素数所需要的时间。<br>已知这一检查算法具有Θ(sqrt(n))的增长阶，你可以期望在千亿附近的素数检查的耗时大约是在百亿附近的素数检查的3.16倍。你得到的数据确实如此吗？<br>那么对于十万亿和万亿得到的数据可以支持这个预测吗？<br>有人说<em>程序在机器上运行的时间正比于计算所需的步数</em>，你得到的结果符合这种说法吗？</strong><br><em>原题目为1000/10000/100000/1000000，但是由于现在计算机性能高涨，只能加七个0以产生显著影响</em></p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">(define (timed-prime-test n)
+  (define (start-prime-test n start-time)
+    (define (report-prime elapsed-time n)
+      (newline)
+      (display n)
+      (display &quot; *** &quot;)
+      (display elapsed-time))
+    (if (prime? n)
+        (report-prime (- (runtime) start-time) n)))
+  (start-prime-test n (runtime)))
+(define (prime? n)
+  ......);略
+(define (search-for-primes a b)
+  (define (primetest i y)
+    (if (not (&gt; i y)) (timed-prime-test i))
+    (if (not (&gt; i y)) (primetest (+ i 2) y)))
+  (primetest (if (= (remainder a 2) 0) (+ a 1) a)  b))
+(search-for-primes 10000000000 10000000100);7.0ms
+(search-for-primes 100000000000 100000000100);20.7ms
+(search-for-primes 1000000000000 1000000000100);69.2ms
+(search-for-primes 10000000000000 10000000000100);231.7ms
+</code></pre>
+<p><em>找素数略</em><br>耗时的预测在十万亿和千亿/万亿和百亿大致正确。</p>
+<p>1.23<br>1.21中的smallest-divisor过程做了许多无用检查：在其检测完2以后，不应该再检测任何偶数。我们希望test-divisor所用的值是（2、3、5、7、9……）。<br><strong>请实现这种修改，其中定义一个过程next：输入2时输出3，其他时候输出输入的数加2。</strong><br><strong>运行1.22找素数测试。这一修改使检查的步数少了一半，你可能期待其运行速度快一倍，实际情况符合这一预期吗？如果不符合，两个算法的速度比值是多少？如何解释比值不等于2？</strong></p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">(define (prime? n)
+  (define (smallest-divisor n)
+    (define (next x)
+      (cond ((&gt; x 2) (+ x 2))
+            (else 3)))
+    (define (divides? a b)
+      (= (remainder b a) 0))
+    (define (find-divisor n test-divisor)
+      (cond ((&gt; (square test-divisor) n) n)
+            ((divides? test-divisor n) test-divisor)
+            (else (find-divisor n (next test-divisor)))))
+    (find-divisor n 2))
+  (= n (smallest-divisor n)));外部测时间略
+(search-for-primes 10000000000 10000000100);3.8ms
+(search-for-primes 100000000000 100000000100);13.0ms
+(search-for-primes 1000000000000 1000000000100);40.9ms
+(search-for-primes 10000000000000 10000000000100);164.2ms
+</code></pre>
+<p>并不符合该预期，速度比值约为1.5。因为只有这个步骤得到了加速。</p>
+<p>1.24<br><strong>修改练习1.22中的timed-prime-test过程，让它使用fast-prime?（费马方法）；<br>运行1.22找素数测试。这一修改让素数测试具有仅仅Θ(logn)的增长速度，你对接近一亿的素数检查和接近一万的素数检查的期望时间比值有何预期？数据表明预期了吗？你能解释不符合预期的地方吗？</strong></p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">(define (search-for-primes a b)
+  (define (timed-prime-test n)
+    (define (fast-prime? n times)
+      (define (fermat-test n)
+        (define (expmod base exp m)
+          (define (square x) (* x x))
+          (cond ((= exp 0) 1)
+                ((even? exp)
+                 (remainder (square (expmod base (/ exp 2) m)) m))
+                (else
+                 (remainder (* base (expmod base (- exp 1) m)) m))
+                ))       
+        (define (try-it a)
+          (= (expmod a n n) a))
+        (try-it (+ 1 (random (- n 1)))))
+      (cond ((= times 0) true)
+            ((fermat-test n) (fast-prime? n (- times 1)))
+            (else false)))
+    (define (start-prime-test n start-time)
+      (define (report-prime elapsed-time n)
+        (newline)
+        (display n)
+        (display &quot; *** &quot;)
+        (display elapsed-time))
+      (if (fast-prime? n 10000);被人为调大
+          (report-prime (- (runtime) start-time) n)))
+    (start-prime-test n (runtime)))
+  (define (primetest i y)
+    (if (not (&gt; i y)) (timed-prime-test i))
+    (if (not (&gt; i y)) (primetest (+ i 2) y)))
+  (primetest (if (= (remainder a 2) 0) (+ a 1) a)  b))
+(search-for-primes 10000 10100);23ms
+(search-for-primes 100000000 100000100);47ms
+</code></pre>
+<p>由这几题可以发现：使用计算步数最多只能“大致预测”程序的运行时间，而算法复杂度是用于评价算法思想“好”的程度的。<br>即使我们计算出来某程序的计算步数，也会由于各种原因——电脑CPU主频的高低、当前系统的拥堵程度、编译器/解释器的优化效率等等——使得计算步数无法对应到最终的运行时间。<br>而算法复杂度更为简单：它估计的是计算步数（空间）的规模随参数的变化而变化的程度。<br>大多数情况下，如果A算法比B算法复杂度低，在参数较小时B可能快于A，但是在参数足够大时，A算法的优势将体现出来。</p>
+<p>1.25<br>有人说<em>在费马测试中的expmod中，我们做了很多的额外工作，我们应该这么写expmod：</em></p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">(define (fast-expt a n)
+  (define (square x)
+    (* x x))
+  (define (even? n)
+    (= (remainder n 2) 0))
+  (cond ((= n 0) 1)
+        ((even? n) (square (fast-expt a (/ n 2))))
+        (else (* a (fast-expt a (- n 1))))))
+(define (expmod base exp m)
+  (remainder (fast-expt base exp) m))
+</code></pre>
+<p><strong>请问：这句话对吗？这个过程可以很好地用于我们的快速素数检查程序吗，为什么？</strong><br>不对，我们仔细阅读费马测试中的代码，会发现exp数值有时候会很大，比如数万，此时原版代码将乘幂减少到可以计算的程度再计算，而这里将会粗暴地计算数十亿的数万次方，计算量会大到难以想象。</p>
+<p>1.26<br>有人在做练习1.24的时候遇到了困难：他的fast-prime?比原来的prime?还要慢。他的朋友在检查他的代码时发现他重写了expmod过程，其中用了一个乘法代替square过程：</p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">(define (expmod base exp m)
+  (define (square x) (* x x))
+  (cond ((= exp 0) 1)
+        ((even? exp)
+         (remainder (* (expmod base (/ exp 2) m);changed
+                       (expmod base (/ exp 2) m))
+                    m))
+        (else
+         (remainder (* base (expmod base (- exp 1) m)) m))
+   ))
+</code></pre>
+<p>这个人如此解释：“我看不出来这会造成什么不同。”<br>而朋友一语道破：“你采用这种方式写这个过程时，就把Θ(logn)的过程变成Θ(n)的了。”<br><strong>请解释这段话。</strong><br>让我们假定我们是一台电脑，即将计算(expmod 2 1024 10)<br>若使用旧的expmod过程，我们将会遇到(square (expmod 2 512 10))，只要计算一次下级的expmod；而题干的expmod过程将会让我们计算两次(expmod 2 512 10)。到最后，旧过程约10次能干完，新过程却要1024次才能干完，对数型增长变成了线性增长。</p>
+<p>1.27<br><strong>证明脚注47*中列出的Carmichael数确实能骗过费马检查。<br>为了证明这一点，你可以写一个过程，输入整数n，对每个a&lt;n检查a^n是否与a模n同余。</strong></p>
 
       
 
@@ -648,6 +824,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">个人简介</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">杂事</a>
               </li>
              
@@ -657,10 +837,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">人物剪影</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">个人简介</a>
               </li>
              
               <li class="article-tag-list-item">
