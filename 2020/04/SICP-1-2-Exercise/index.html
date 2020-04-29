@@ -25,7 +25,7 @@
 <meta property="og:site_name" content="Hanashiro&#39;s HolloWorld">
 <meta property="og:description" content="花白的SICP之旅（2）">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-04-25T14:38:30.172Z">
+<meta property="og:updated_time" content="2020-04-29T04:12:36.559Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SICP 1-2 Exercise | SICP第一章第二节习题">
 <meta name="twitter:description" content="花白的SICP之旅（2）">
@@ -641,7 +641,7 @@
 (ultra-prime? 2821);#t
 (ultra-prime? 6601);#t;超级筛法反而没用了
 </code></pre>
-<p>1.28<br>费马检查的一种不会被欺骗的变形为Miller-Rabin检查，它来源于费马小定理的一个变形。<br>这个变形断言：如果n是素数，那么任何小于a的整数的n-1次幂与1模n同余。<br>要用该检查方法考察n的素性，我们应该随机抽取数a\&lt;n并用expmod求a的n-1次幂对n的模。<br>然而，在执行expmod中的平方步骤时，我们需要查看是否遇到了“1取模n的非平凡平方根”，也就是说，是不是存在不等于1或者n-1的数，其平方取模n等于1。<br>可以证明，如果1的这种非平凡平方根存在，那么n就不是素数。还可以证明，如果n是非素数的奇数，那么至少有一半的数a\&lt;n，按照这种方式计算a^(n-1)，将会遇到1取模n的非平凡平方根。这也是该检查不会受骗的原因。<br><strong>请修改expmod过程，让它在发现1的非平凡平方根时报告失败，并利用它实现一个类似于fermat-test的过程，完成Miller-Rabin检查。通过检查一些已知素数和非素数的方式考验你的过程。</strong><br><em>提示：送出失败信号的一种简单方式就是返回0</em></p>
+<p>1.28<br>费马检查的一种不会被欺骗的变形为Miller-Rabin检查，它来源于费马小定理的一个变形。<br>这个变形断言：如果n是素数，那么任何小于a的整数的n-1次幂与1模n同余。<br>要用该检查方法考察n的素性，我们应该随机抽取数a\&lt;n并用<font face="Consolas,Monaco,Menlo,monospace">expmod</font>求a的n-1次幂对n的模。<br>然而，在执行<font face="Consolas,Monaco,Menlo,monospace">expmod</font>中的平方步骤时，我们需要查看是否遇到了“1取模n的非平凡平方根”，也就是说，是不是存在不等于1或者n-1的数，其平方取模n等于1。<br>可以证明，如果1的这种非平凡平方根存在，那么n就不是素数。还可以证明，如果n是非素数的奇数，那么至少有一半的数a\&lt;n，按照这种方式计算a^(n-1)，将会遇到1取模n的非平凡平方根。这也是该检查不会受骗的原因。<br><strong>请修改<font face="Consolas,Monaco,Menlo,monospace">expmod</font>过程，让它在发现1的非平凡平方根时报告失败，并利用它实现一个类似于<font face="Consolas,Monaco,Menlo,monospace">fermat-test</font>的过程，完成Miller-Rabin检查。通过检查一些已知素数和非素数的方式考验你的过程。</strong><br><em>提示：送出失败信号的一种简单方式就是返回0</em></p>
 <p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
 
 <pre><code class="scheme">(define (prime? x)
@@ -900,7 +900,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">计算机</a>
+                <a href="javascript:void(0)" class="js-tag color2">邢嘉和|Broca-Phenol</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">人物剪影</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -908,11 +912,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">邢嘉和|Broca-Phenol</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">人物剪影</a>
+                <a href="javascript:void(0)" class="js-tag color4">计算机</a>
               </li>
              
               <li class="article-tag-list-item">
