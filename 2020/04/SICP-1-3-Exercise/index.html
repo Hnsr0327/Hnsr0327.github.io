@@ -25,7 +25,7 @@
 <meta property="og:site_name" content="Hanashiro&#39;s HolloWorld">
 <meta property="og:description" content="花白的SICP之旅（3）">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-04-29T04:40:11.275Z">
+<meta property="og:updated_time" content="2020-05-01T07:08:46.219Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SICP 1-3 Exercise | SICP第一章第三节习题">
 <meta name="twitter:description" content="花白的SICP之旅（3）">
@@ -252,8 +252,60 @@
   (iter a 0))
 &gt;(simpson-iter cube 0 1 1000);用sum-iter重写的辛普森
 0.25
+&lt;p class=&quot;code-caption&quot; data-lang=&quot;&quot; data-line_number=&quot;frontend&quot; data-trim_indent=&quot;backend&quot; data-label_position=&quot;outer&quot; data-labels_left=&quot;Code&quot; data-labels_right=&quot;:&quot; data-labels_copy=&quot;&quot;&gt;&lt;span class=&quot;code-caption-label&quot;&gt;&lt;/span&gt;&lt;a class=&quot;code-caption-copy&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+
 </code></pre>
 <p><font size="2">*接下来的三个练习，意图是阐释用一个适当的抽象整理许多看起来毫无关系的操作，从而获得巨大的表达能力。虽然“累积”和“过滤器”都是很优美的想法，但我们不急于将它们用在这里——因为我们还没有数据结构的思想，无法用他们去提供组合这些抽象的适当手段。<br>我们将在2.2.3节回到这些思想，那时候将会说明如何用序列的概念作为界面，组合过滤器和累积，从而构造出强大得多的抽象。我们会在那时候看到，这些方法本身如何能成为设计程序的强有力而又非常优美的途径。</font><br>1.31<br>a)过程<font face="Consolas,Monaco,Menlo,monospace">sum</font>是可以用高阶过程表示的大量类似抽象中最简单的一个。<br><strong>请写出一个类似的称为<font face="Consolas,Monaco,Menlo,monospace">product</font>的过程，它返回在给定范围中各点的某个函数值的乘积。请说明如何用<font face="Consolas,Monaco,Menlo,monospace">product</font>定义<font face="Consolas,Monaco,Menlo,monospace">factorial</font>。另请按照下面公式计算Π的近似值：</strong><br>Π/4=2·4·4·6·6·8···/3·3·5·5·7·7···<br>b)你的<font face="Consolas,Monaco,Menlo,monospace">product</font>过程不是递归就是迭代。<br><strong>请写出另一种<font face="Consolas,Monaco,Menlo,monospace">product</font>过程。</strong></p>
+<pre><code class="scheme">(define (product term a next b)
+  (if (&gt; a b)
+      1
+      (* (product term (next a) b next) (term a))))
+(define (factorial x);用product定义的factorial
+  (define (eq x) x)
+  (product eq 1 inc x))
+(define (sum-pi-2 x)
+  (define (f x)
+    (/ (* (* x 2) (+ (* x 2) 2)) (* (+ (* x 2) 1) (+ (* x 2) 1)))
+    )
+  (* 4.0 (product f 1 inc x)))
+(define (product-iter term a next b)
+  (define (iter a result)
+    (if (&gt; a b)
+        result
+        (iter (next a) (* result (term a)))))
+  (iter a 1))
+(define (factorial-iter x)
+  (define (eq x) x)
+  (product-iter eq 1 inc x))
+</code></pre>
+<p>1.32<br>a)请说明，<font face="Consolas,Monaco,Menlo,monospace">sum</font>和<font face="Consolas,Monaco,Menlo,monospace">product</font>（练习1.13）都是另一个被称为<font face="Consolas,Monaco,Menlo,monospace">accumulate</font>的更一般概念的特殊情况，<font face="Consolas,Monaco,Menlo,monospace">accumulate</font>使用某些一般性的累积函数组成一系列项：</p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">(accumulate combiner null-value term a next b)
+</code></pre>
+<p><font face="Consolas,Monaco,Menlo,monospace">accumulate</font>取的是和<font face="Consolas,Monaco,Menlo,monospace">sum/product</font>一样的项和范围描述参数，再加上一个（两个参数的）<font face="Consolas,Monaco,Menlo,monospace">combiner</font>过程，它描述如何将当前项与前面各项的积累结果组合起来，另外还有一个<font face="Consolas,Monaco,Menlo,monospace">null-value</font>参数，它描述在所有的项都用完时的基本值。<br><strong>请写出<font face="Consolas,Monaco,Menlo,monospace">accumulate</font>，并说明我们能怎样基于简单地调用<font face="Consolas,Monaco,Menlo,monospace">accumulate</font>，定义出<font face="Consolas,Monaco,Menlo,monospace">sum</font>和<font face="Consolas,Monaco,Menlo,monospace">product</font>来。</strong><br>b)你的<font face="Consolas,Monaco,Menlo,monospace">accumulate</font>过程不是递归就是迭代。<br><strong>请写出另一种<font face="Consolas,Monaco,Menlo,monospace">accumulate</font>过程。</strong></p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">(define (accumulate combiner null-value term a next b)
+  (if (&gt; a b)
+      null-value
+      (combiner (accumulate combiner null-value term (next a) next b) (term a))
+      )
+  )
+(define (sum-acc term a next b)
+  (accumulate + 0 term a next b))
+(define (product-acc term a next b)
+  (accumulate * 1 term a next b))
+(define (factorial-acc x)
+  (define (eq x) x)
+  (product-acc eq 1 inc x))
+(define (accumulate-iter combiner null-value term a next b)
+  (define (iter a result)
+    (if (&gt; a b)
+        result
+        (iter (next a) (combiner result (term a)))))
+  (iter a null-value))
+</code></pre>
 
       
 
@@ -469,6 +521,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">个人简介</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">邢嘉和|Broca-Phenol</a>
               </li>
              
@@ -478,10 +534,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">计算机</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">个人简介</a>
               </li>
              
               <li class="article-tag-list-item">
