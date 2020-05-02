@@ -25,7 +25,7 @@
 <meta property="og:site_name" content="Hanashiro&#39;s HolloWorld">
 <meta property="og:description" content="花白的SICP之旅（3）">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-05-01T07:08:46.219Z">
+<meta property="og:updated_time" content="2020-05-02T06:29:46.623Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SICP 1-3 Exercise | SICP第一章第三节习题">
 <meta name="twitter:description" content="花白的SICP之旅（3）">
@@ -170,7 +170,8 @@
 <p>花白的SICP之旅（3）</p>
 </blockquote>
 <a id="more"></a>
-<h3 id="用高阶函数做抽象"><a href="#用高阶函数做抽象" class="headerlink" title="用高阶函数做抽象"></a>用高阶函数做抽象</h3><p>本节展示了高阶过程（操作过程的过程）如何能成为强有力的抽象机制，极大增强该语言的表述能力。<br><em>以下为本节的示例代码</em></p>
+<h3 id="用高阶函数做抽象"><a href="#用高阶函数做抽象" class="headerlink" title="用高阶函数做抽象"></a>用高阶函数做抽象</h3><p>本节展示了高阶过程（操作过程的过程）如何能成为强有力的抽象机制，极大增强该语言的表述能力。</p>
+<h3 id="过程作为参数"><a href="#过程作为参数" class="headerlink" title="过程作为参数"></a>过程作为参数</h3><p><em>以下为本节的示例代码</em></p>
 <p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
 
 <pre><code class="scheme">(define (sum-integers a b)
@@ -209,7 +210,7 @@
 &gt;(integral cube 0 1 0.01);求f=x^3在(0,1)的定积分值
 0.24998750000000042
 </code></pre>
-<h3 id="过程作为参数"><a href="#过程作为参数" class="headerlink" title="过程作为参数"></a>过程作为参数</h3><p>1.29<br>辛普森规则是另一种比上面所用规则更精确的数值积分方法。函数f在范围a和b之间的定积分的近似值是h/3(y0+4y1+2y2……+2y(n-2)+4y(n-1)+yn)，其中h=(b-a)/n（n是一个偶数），yk=f(a+kh)。<br><strong>请定义一个过程，它有参数f、a、b和n，采用辛普森规则计算并返回积分值。用你的过程计算cube在(0,1)的积分（用n=100和n=1000），并将得到的值与示例代码中<font face="Consolas,Monaco,Menlo,monospace">integral</font>过程得到的值做对比</strong></p>
+<p>1.29<br>辛普森规则是另一种比上面所用规则更精确的数值积分方法。函数f在范围a和b之间的定积分的近似值是h/3(y0+4y1+2y2……+2y(n-2)+4y(n-1)+yn)，其中h=(b-a)/n（n是一个偶数），yk=f(a+kh)。<br><strong>请定义一个过程，它有参数f、a、b和n，采用辛普森规则计算并返回积分值。用你的过程计算cube在(0,1)的积分（用n=100和n=1000），并将得到的值与示例代码中<font face="Consolas,Monaco,Menlo,monospace">integral</font>过程得到的值做对比</strong></p>
 <p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
 
 <pre><code class="scheme">(define (cube x)
@@ -278,7 +279,7 @@
   (define (eq x) x)
   (product-iter eq 1 inc x))
 </code></pre>
-<p>1.32<br>a)请说明，<font face="Consolas,Monaco,Menlo,monospace">sum</font>和<font face="Consolas,Monaco,Menlo,monospace">product</font>（练习1.13）都是另一个被称为<font face="Consolas,Monaco,Menlo,monospace">accumulate</font>的更一般概念的特殊情况，<font face="Consolas,Monaco,Menlo,monospace">accumulate</font>使用某些一般性的累积函数组成一系列项：</p>
+<p>1.32<br>a)请说明，<font face="Consolas,Monaco,Menlo,monospace">sum</font>和<font face="Consolas,Monaco,Menlo,monospace">product</font>（练习1.31）都是另一个被称为<font face="Consolas,Monaco,Menlo,monospace">accumulate</font>的更一般概念的特殊情况，<font face="Consolas,Monaco,Menlo,monospace">accumulate</font>使用某些一般性的累积函数组成一系列项：</p>
 <p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
 
 <pre><code class="scheme">(accumulate combiner null-value term a next b)
@@ -305,6 +306,41 @@
         result
         (iter (next a) (combiner result (term a)))))
   (iter a null-value))
+</code></pre>
+<p>1.33<br>你可以通过引进一个处理被组合项的过滤器（filter）概念，写出一个比<font face="Consolas,Monaco,Menlo,monospace">accumulate</font>（练习1.32）更一般的版本。也就是说，在计算过程中，只组合起有给定范围得到的项里的那些满足特定条件的项。这样得到的<font face="Consolas,Monaco,Menlo,monospace">filtered-accumulate</font>抽象取与上面累积过程同样的参数，再加上一个另外的描述过滤器的谓词参数。<br><strong>请写出<font face="Consolas,Monaco,Menlo,monospace">filtered-accumulate</font>过程，并说明如何用<font face="Consolas,Monaco,Menlo,monospace">filtered-accumulate</font>表达以下内容：<br>a)求出在区间a到b中所有素数之和；<br>b)小于n的所有与n互素的正整数之乘积。</strong></p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">(define (filtered-accumulate filter combiner null-value term a next b)
+  (if (&gt; a b)
+      null-value
+      (if (filter a)
+          (combiner (filtered-accumulate filter combiner null-value term (next a) next b) (term a))
+          (filtered-accumulate filter combiner null-value term (next a) next b)
+          )))
+(define (filtered-accumulate-iter filter combiner null-value term a next b)
+  (define (iter a result)
+    (if (&gt; a b)
+        result
+        (if (filter a)
+            (iter (next a) (combiner result (term a)))
+            (iter (next a) result)
+            )))
+  (iter a null-value))
+(define (prime-filter-acc a b)
+  (define (eq x) x)
+  (filtered-accumulate prime? + 0 eq a inc b))
+(define (gcd1? a b)
+  (if (= 1 (gcd a b)) true false))
+(define (gcd1-filter-acc n)
+  (define (eq x) x)
+  (filtered-accumulate (lambda (x) (gcd1? x n)) * 1 eq 1 inc (- n 1)))
+</code></pre>
+<h3 id="用lambda构造过程"><a href="#用lambda构造过程" class="headerlink" title="用lambda构造过程"></a>用<font face="Consolas,Monaco,Menlo,monospace">lambda</font>构造过程</h3><p><em>以下为本节的示例代码</em></p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">(λ (x) (+ x 4));“那个返回其输入值加4的过程”
+(λ (x) (/ 1.0 (* x (+ x 2))));“那个返回其输入与它加2的乘积的倒数的过程”
+(define plus4 (+ x 4));
 </code></pre>
 
       
@@ -517,11 +553,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">个人简介</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">杂事</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">个人简介</a>
+                <a href="javascript:void(0)" class="js-tag color3">往事</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">计算机</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -530,14 +574,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">人物剪影</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">计算机</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">往事</a>
               </li>
             
             <div class="clearfix"></div>
