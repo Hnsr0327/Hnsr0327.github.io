@@ -25,7 +25,7 @@
 <meta property="og:site_name" content="Hanashiro&#39;s HolloWorld">
 <meta property="og:description" content="花白的SICP之旅（3）">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-05-15T04:32:50.983Z">
+<meta property="og:updated_time" content="2020-08-25T06:14:58.587Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SICP 1-3 Exercise | SICP第一章第三节习题">
 <meta name="twitter:description" content="花白的SICP之旅（3）">
@@ -448,6 +448,176 @@
   (fixed-point (lambda (y) (average y (/ x y)))
                1.0))
 </code></pre>
+<p>1.35<br><strong>请证明黄金分割率φ是变换x→1+1/x的不动点。并利用这一事实，用过程<font face="Consolas,Monaco,Menlo,monospace">fixed-point</font>计算出φ的值。</strong></p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">;: φ^2=φ+1 -&gt; φ=1+1/φ
+&gt;(fixed-point (lambda (x) (+ 1 (/ 1 x))) 1)
+1+377/610 (1.61803)
+</code></pre>
+<p>1.36<br><strong>请修改<font face="Consolas,Monaco,Menlo,monospace">fixed-point</font>，利用练习1.22展示的<font face="Consolas,Monaco,Menlo,monospace">newline</font>和<font face="Consolas,Monaco,Menlo,monospace">display</font>基本过程，使它打印出计算中产生的近似值序列。然后用它找出x→log(1000)/log(x)的不动点（即确定x^x=1000的一个根）。</strong>同时，<strong>请比较使用平均阻尼和非平均阻尼的计算步数。</strong></p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">(define (fixed-point-1-36 f first-guess)
+  (define (close-enough? v1 v2)
+    (&lt; (abs (- v1 v2)) tolerance))
+  (define (try guess i)
+    (display-formatter guess i)
+    (let ((next (f guess)))
+      (if (close-enough? guess next)
+          (begin
+          (display-formatter guess (+ i 1))
+          next)
+          (try next (+ i 1)))))
+  (try first-guess 1))
+(define (display-formatter a b)
+  (display a)
+  (display &quot; &quot;)
+  (display b)
+  (newline))
+&gt; (fixed-point-1-36 (lambda (x) (/ (log 1000) (log x))) 1.1)
+1.1 1
+72.47657378429035 2
+1.6127318474109593 3
+14.45350138636525 4
+2.5862669415385087 5
+;:略过
+4.555552779647764 34
+4.555524444961165 35
+4.555543131130589 36
+4.555530807938518 37
+4.555530807938518 38
+4.555538934848503
+&gt; (fixed-point-1-36 (lambda (x) (/ (+ x (/ (log 1000) (log x))) 2)) 1.1)
+1.1 1
+36.78828689214517 2
+19.352175531882512 3
+10.84183367957568 4
+6.870048352141772 5
+;:略过
+4.5563204194309606 10
+4.555669361784037 11
+4.555558462975639 12
+4.55553957996306 13
+4.55553957996306 14
+4.555536364911781
+;:非平均阻尼要更慢一点
+</code></pre>
+<p>1.37<br>a)已知有一个无穷连分式（<a href="https://zh.wikipedia.org/wiki/%E8%BF%9E%E5%88%86%E6%95%B0" target="_blank" rel="noopener">维基百科</a>），作为一个例子，我们可以证明，当其中的分子数字和分母数字都等于1时，它将产生1/φ，φ是上面题目中的黄金分割率。逼近某个无穷连分式的一个方法是：在k项后面截断，这个截断叫做<em>k项有限连分式</em>。<br>假定n和d都是只有一个参数（项下标i）的过程，它们分别返回连分式的分子数字和分母数字。<br><strong>请定义一个过程<font face="Consolas,Monaco,Menlo,monospace">cont-frac</font>，使得对<font face="Consolas,Monaco,Menlo,monospace">(cont-frac n d k)</font>的求值计算出<font face="Consolas,Monaco,Menlo,monospace">k</font>项有限连分式的值。<br>你需要取多大的k才能保证得到的近似值具有十进制的4位精度？</strong><br>b)你的<font face="Consolas,Monaco,Menlo,monospace">cont-frac</font>过程不是递归就是迭代。<br><strong>请写出另一种<font face="Consolas,Monaco,Menlo,monospace">cont-frac</font>过程。</strong></p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">;:递归
+(define (cont-frac-rec n d k)
+  (define (rec i)
+    (if (= k i)
+      (/ (n k) (d k))
+      (/ (n i)
+        (+ (d i) (rec (+ i 1))))))
+  (rec 1)
+)
+;:k&gt;=11时有4位精度
+&gt; (cont-frac-rec (lambda (i) 1.0)
+             (lambda (i) 1.0)
+             11)
+(cont-frac-rec (lambda (i) 1.0)
+           (lambda (i) 1.0)
+           1000)
+0.6180555555555556
+0.6180339887498948
+;:迭代
+(define (cont-frac-iter n d k)
+  (define (iter i result)
+    (if (= i 1)
+      (/ (n 1) (+ (d 1) result))
+      (iter (- i 1) (/ (n i) (+ (d i) result)))))
+  (iter k 0)
+)
+</code></pre>
+<p>1.38<br>在1737年，瑞士数学家莱昂哈德·欧拉发表了一篇论文，其中包含了e-2的一个连分式展开。在这一分式中，Ni全都是1，D1依次为1,2,1,1,4,1,1,6,1,1,8,…。<br><strong>请写出一个程序，其中使用了1.37所做的<font face="Consolas,Monaco,Menlo,monospace">cont-frac</font>过程，并能基于该展开式求出e的近似值。</strong></p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">(define (cont-frac-iter n d k)
+  (define (iter i result)
+    (if (= i 1)
+      (/ (n 1) (+ (d 1) result))
+      (iter (- i 1) (/ (n i) (+ (d i) result)))))
+  (iter k 0)
+)
+&gt; (cont-frac-iter (lambda (x) 1.0)
+                  (lambda (x) (if (= (remainder x 3) 2)
+                                  (+ (* (quotient x 3) 2) 2)
+                                  1))
+                  100)
+0.7182818284590453
+</code></pre>
+<p>1.39<br><a href="http://www.360doc.com/content/19/0413/13/46986705_828483037.shtml" target="_blank" rel="noopener">正切函数的连分式</a>表示由德国数学家J.H. Lambert在1770年发表。<br><strong>请定义过程<font face="Consolas,Monaco,Menlo,monospace">(tan-cf x k)</font>，它基于Lambert公式计算正切函数的近似值。（k是计算的项数，就像1.37一样）</strong></p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">(define (cont-frac-iter n d k)
+  (define (iter i result)
+    (if (= i 1)
+      (/ (n 1) (+ (d 1) result))
+      (iter (- i 1) (/ (n i) (+ (d i) result)))))
+  (iter k 0)
+)
+
+(define (tan-cf x k)
+  (cont-frac-iter (lambda (i) (if (= i 1)
+                                  x
+                                  (- (* x x))))
+                  (lambda (i) (- (* i 2) 1))
+                  k))
+&gt; (tan-cf (/ 3.1415926535 4) 1000)
+0.9999999999551035
+</code></pre>
+<h3 id="过程作为返回值"><a href="#过程作为返回值" class="headerlink" title="过程作为返回值"></a>过程作为返回值</h3><p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">(define (average-damp f);:平均阻尼的**思想**
+  (lambda (x) (average x (f x))))
+&gt; ((average-damp square) 10)
+55
+(define (sqrt x);:三种思想，一个方法
+  (fixed-point (average-damp (lambda (y) (/ x y)))
+               1.0))
+(define (cube-root x)
+  (fixed-point (average-damp (lambda (y) (/ x (square y))))
+               1.0))
+(define (deriv g)
+  (define dx 0.00001)
+  (lambda (x)
+    (/ (- (g (+ x dx)) (g x))
+      dx)))
+&gt; ((deriv (lambda (x) (* x x x))) 5);:f(x)=x^3在x=5的导数
+75.00014999664018
+(define (newton-transform g)
+  (lambda (x)
+    (- x (/ (g x) ((deriv g) x)))))
+(define (newtons-method g guess);:新牛顿法（求不动点的过程）
+  (fixed-point (newton-transform g) guess))
+(define (sqrt x)
+  (newtons-method (lambda (y) (- (square y) x))
+                  1.0))
+(define (fixed-point-of-transform g transform guess)
+  (fixed-point (transform g) guess))
+(define (sqrt x)
+  (fixed-point-of-transform (lambda (y) (/ x y))
+                            average-damp
+                            1.0))
+(define (sqrt x)
+  (fixed-point-of-transform (lambda (y) (- (square y) x))
+                            newton-transform
+                            1.0))
+</code></pre>
+<p>1.40<br>请定义一个过程<font face="Consolas,Monaco,Menlo,monospace">cubic</font>，它和<font face="Consolas,Monaco,Menlo,monospace">newtons-method</font>过程一起使用在下面形式的表达式里：</p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">(newtons-method (cubic a b c) 1)
+</code></pre>
+<p>能逼近三次方程x^3+ax^2+bx+c的零点。</p>
+<p class="code-caption" data-lang="scheme" data-line_number="frontend" data-trim_indent="backend" data-label_position="outer" data-labels_left="Code" data-labels_right=":" data-labels_copy><span class="code-caption-label"></span><a class="code-caption-copy"></a></p>
+
+<pre><code class="scheme">
+</code></pre>
 
       
 
@@ -676,10 +846,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">个人简介</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">邢嘉和|Broca-Phenol</a>
               </li>
              
@@ -689,6 +855,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">计算机</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">个人简介</a>
               </li>
              
               <li class="article-tag-list-item">
