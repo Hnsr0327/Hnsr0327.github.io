@@ -4,8 +4,13 @@ title: hnsr0327
 theme: PaperMod
 enableRobotsTXT: true
 buildDrafts: false
+enableGitInfo: true
+
+frontmatter:
+  lastmod: [lastmod, ':git', date]
 
 params:
+  mainSections: [posts]
   defaultTheme: auto
   ShowReadingTime: true
   ShowShareButtons: false
@@ -21,6 +26,9 @@ menu:
     - name: Posts
       url: /posts/
       weight: 10
+    - name: Notes
+      url: /notes/
+      weight: 15
     - name: Archives
       url: /archives/
       weight: 20
