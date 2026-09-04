@@ -1,0 +1,8 @@
+{{ with .GetTerms "tags" }}
+<div class="article-tag tagcloud">
+  <i class="icon-price-tags icon"></i>
+  <ul class="article-tag-list">
+    {{ range $i, $t := . }}<li class="article-tag-list-item"><a href="{{ $t.RelPermalink }}" class="article-tag-list-link color{{ add 1 (mod $i 5) }}">{{ $t.LinkTitle }}</a></li>{{ end }}
+  </ul>
+</div>
+{{ end }}

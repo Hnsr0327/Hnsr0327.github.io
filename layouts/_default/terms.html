@@ -1,0 +1,12 @@
+{{ define "main" }}
+<section class="archives-wrap">
+  <div class="archive-year-wrap"><a class="archive-year">{{ .Title }}</a></div>
+  <div class="archives">
+    <div class="article-tag tagcloud tag-index">
+      <ul class="article-tag-list">
+        {{ range $i, $t := .Data.Terms.ByCount }}<li class="article-tag-list-item"><a href="{{ $t.Page.RelPermalink }}" class="article-tag-list-link color{{ add 1 (mod $i 5) }}">{{ $t.Page.Title }} ({{ $t.Count }})</a></li>{{ end }}
+      </ul>
+    </div>
+  </div>
+</section>
+{{ end }}

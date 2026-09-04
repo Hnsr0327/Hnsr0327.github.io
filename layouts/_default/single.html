@@ -1,0 +1,22 @@
+{{ define "main" }}
+<article class="article article-type-post">
+  <div class="article-inner">
+    <header class="article-header">
+      <h1 class="article-title">{{ .Title }}</h1>
+      {{ partial "date.html" . }}
+    </header>
+    <div class="article-entry">
+      {{ if and .Params.ShowToc .TableOfContents }}<div class="post-toc">{{ .TableOfContents }}</div>{{ end }}
+      {{ .Content }}
+    </div>
+    <div class="article-info article-info-post">
+      {{ partial "tags.html" . }}
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+<nav id="article-nav">
+  {{ with .NextInSection }}<a href="{{ .RelPermalink }}" id="article-nav-newer" class="article-nav-link-wrap"><i class="icon-circle-left"></i><div class="article-nav-title">{{ .Title }}</div></a>{{ end }}
+  {{ with .PrevInSection }}<a href="{{ .RelPermalink }}" id="article-nav-older" class="article-nav-link-wrap"><div class="article-nav-title">{{ .Title }}</div><i class="icon-circle-right"></i></a>{{ end }}
+</nav>
+{{ end }}

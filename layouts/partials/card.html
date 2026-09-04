@@ -1,0 +1,16 @@
+<article class="article article-type-post article-index">
+  <div class="article-inner">
+    <header class="article-header">
+      <h1><a class="article-title" href="{{ .RelPermalink }}">{{ .Title }}</a></h1>
+      {{ partial "date.html" . }}
+    </header>
+    <div class="article-entry">
+      {{ if .Truncated }}{{ .Summary }}<a class="article-more-a" href="{{ .RelPermalink }}#more">more >></a>{{ else }}{{ .Content }}{{ end }}
+    </div>
+    <div class="article-info article-info-index">
+      {{ partial "tags.html" . }}
+      <p class="article-more-link"><a class="article-more-a" href="{{ .RelPermalink }}">展开全文 >></a></p>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>

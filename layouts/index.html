@@ -1,0 +1,6 @@
+{{ define "main" }}
+{{ $pages := where .Site.RegularPages "Section" "in" .Site.Params.mainSections }}
+{{ $p := .Paginate $pages 10 }}
+{{ range $p.Pages }}{{ partial "card.html" . }}{{ end }}
+{{ partial "pagination.html" $p }}
+{{ end }}

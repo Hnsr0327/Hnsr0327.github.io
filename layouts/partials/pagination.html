@@ -1,0 +1,7 @@
+{{ if gt .TotalPages 1 }}
+<nav id="page-nav">
+  {{ if .HasPrev }}<a class="extend prev" href="{{ .Prev.URL }}">&laquo; Prev</a>{{ end }}
+  <span class="page-number current">{{ .PageNumber }} / {{ .TotalPages }}</span>
+  {{ if .HasNext }}<a class="extend next" href="{{ .Next.URL }}">Next &raquo;</a>{{ end }}
+</nav>
+{{ end }}

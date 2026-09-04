@@ -1,0 +1,20 @@
+<div class="left-col">
+  <div class="overlay" style="background: {{ .Site.Params.themeColor }}"></div>
+  <div class="intrude-less">
+    <header id="header" class="inner">
+      <a href="/" class="profilepic"><img src="{{ .Site.Params.avatar }}" class="js-avatar show" alt=""></a>
+      <hgroup><h1 class="header-author"><a href="/">{{ .Site.Params.author }}</a></h1></hgroup>
+      <nav class="header-menu">
+        <ul>{{ range .Site.Menus.main }}<li><a href="{{ .URL }}">{{ .Name }}</a></li>{{ end }}</ul>
+      </nav>
+      <nav class="header-smart-menu">
+        {{ range .Site.Menus.smart }}<a href="{{ .URL }}">{{ .Name }}</a>{{ end }}
+      </nav>
+      <nav class="header-nav">
+        <div class="social">
+          <a class="mail" target="_blank" href="mailto:{{ .Site.Params.email }}" title="mail"><i class="icon-mail"></i></a>
+        </div>
+      </nav>
+    </header>
+  </div>
+</div>

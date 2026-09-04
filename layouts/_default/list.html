@@ -1,0 +1,6 @@
+{{ define "main" }}
+{{ if .Content }}<article class="article article-type-post"><div class="article-inner"><header class="article-header"><h1 class="article-title">{{ .Title }}</h1></header><div class="article-entry">{{ .Content }}</div></div></article>{{ end }}
+{{ $p := .Paginate .Pages 10 }}
+{{ range $p.Pages }}{{ partial "card.html" . }}{{ end }}
+{{ partial "pagination.html" $p }}
+{{ end }}

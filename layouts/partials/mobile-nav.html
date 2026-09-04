@@ -1,0 +1,21 @@
+<nav id="mobile-nav">
+  <div class="overlay js-overlay" style="background: {{ .Site.Params.themeColor }}"></div>
+  <div class="btnctn js-mobile-btnctn">
+    <div class="slider-trigger list" id="js-mobile-toggle"><i class="icon icon-sort"></i></div>
+  </div>
+  <div class="intrude-less">
+    <header id="header" class="inner">
+      <div class="profilepic"><img src="{{ .Site.Params.avatar }}" class="js-avatar show" alt=""></div>
+      <hgroup><h1 class="header-author js-header-author">{{ .Site.Params.author }}</h1></hgroup>
+      <nav class="header-nav">
+        <div class="social"><a class="mail" target="_blank" href="mailto:{{ .Site.Params.email }}" title="mail"><i class="icon-mail"></i></a></div>
+      </nav>
+      <nav class="header-menu js-header-menu">
+        {{ $items := .Site.Menus.main }}{{ $n := len $items }}
+        <ul style="width: {{ mul 25 $n }}%">
+          {{ range $items }}<li style="width: {{ div 100 $n }}%"><a href="{{ .URL }}">{{ .Name }}</a></li>{{ end }}
+        </ul>
+      </nav>
+    </header>
+  </div>
+</nav>

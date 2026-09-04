@@ -1,41 +1,36 @@
 baseURL: https://hnsr0327.github.io/
 locale: zh-CN
-title: hnsr0327
-theme: PaperMod
+title: Hanashiro's HolloWorld
 enableRobotsTXT: true
 buildDrafts: false
 enableGitInfo: true
+summaryLength: 40
 
 frontmatter:
   lastmod: [lastmod, ':git', date]
 
 params:
-  mainSections: [posts]
-  defaultTheme: dark
-  disableThemeToggle: true
-  ShowReadingTime: true
-  ShowShareButtons: false
-  ShowPostNavLinks: true
-  ShowCodeCopyButtons: true
-  ShowToc: true
-  homeInfoParams:
-    Title: hnsr0327
-    Content: 重新开始。
+  author: Hanashiro
+  avatar: /pictures/Hnsr.png
+  email: hnsr@protonmail.com
+  themeColor: "#dd3333"
+  mainSections: [posts, notes]
 
 menu:
   main:
-    - name: Posts
-      url: /posts/
+    - name: 主页
+      url: /
       weight: 10
-    - name: Notes
+    - name: 笔记
       url: /notes/
-      weight: 15
-    - name: Archives
-      url: /archives/
       weight: 20
-    - name: Tags
+  smart:
+    - name: 所有文章
+      url: /archives/
+      weight: 10
+    - name: 标签
       url: /tags/
-      weight: 30
+      weight: 20
 
 outputs:
   home: [HTML, RSS, JSON]
@@ -43,3 +38,6 @@ outputs:
 markup:
   highlight:
     noClasses: false
+  goldmark:
+    renderer:
+      unsafe: true
