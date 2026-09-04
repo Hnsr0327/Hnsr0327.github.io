@@ -10,7 +10,7 @@ ShowToc: true
 tl;dr²
 ```
 MSRP is Myth, List Price is Myth, List Price was never the clearing price.
-2026-08-31
+2026-09-04
 御三家（OpenAI / Anthropic / Google）
 (17)171 刀实付，控制设备支付环境，约 (45¹)900 小时 GPT 5.6 Sol ，或约 (400¹)8000 小时 GPT 5.6 Luna
 (20)100 刀实付，严格控制风控环境，约 (15²)120 小时 Opus ，或约 (0³)40 小时 Fable
@@ -29,7 +29,7 @@ MSRP is Myth, List Price is Myth, List Price was never the clearing price.
 tl;dr
 ```
 MSRP is Myth, List Price is Myth, List Price was never the clearing price.
-2026-08-31
+2026-09-04
 御三家（OpenAI / Anthropic / Google）
 171 刀实付 -> 27373 JPY 实付 -> "200 刀实付" -> 900 ~ 13000 刀 MSRP GPT (Codex) -> 约 60 ~ 900 小时 GPT 5.6 Sol
 100 刀实付 -> ~1150 刀 MSRP 的 Claude (Claude Code) -> 约 120 小时 Opus ，或约 40 小时 Fable
@@ -118,7 +118,7 @@ kimi
 charm hyper
 ```
 hyper.charm.land
-20 刀实付 -> 100 刀 MSRP 的 “精选模型”，或 12.5 刀 MSRP 每日刷新持续 30 天。
+20 刀实付 -> 12.5 刀 MSRP 每日刷新持续 30 天。
 K3 保真， Charm 的 LLM 墙钟速度是官方两倍，LLM / 非 LLM 七三开，约等于 1.5 倍速。
 ```
 
@@ -203,3 +203,11 @@ in the article I just use MSRP as List price
 ```
 
 
+
+## 更新记录
+
+- 2026-09-04：Charm Hyper 去掉 100 刀 MSRP 套餐档，只剩 12.5 刀每日刷新。
+- 2026-08-31：全面改写。新增 Gemini、Grok、Charm Hyper、Codebuddy；新增名义和实付两张燃烧速度表；tl;dr 改为带括号的双档写法；加脚注。
+- 2026-07-31：首版。GPT、Claude、GLM、Kimi、OpenCode Go 五家。
+
+完整逐行差异见 [git 历史](https://github.com/Hnsr0327/Hnsr0327.github.io/commits/master/content/notes/agent-cost.md)。
