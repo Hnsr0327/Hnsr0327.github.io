@@ -1,0 +1,53 @@
+/* Warm dark palette. Values are intentionally literal; keep them in sync by hand. */
+.dark {
+  --theme: #131315;
+  --entry: #1b1b1e;
+  --primary: #e0dcd6;
+  --secondary: #9a9690;
+  --tertiary: #2e2e33;
+  --content: #e0dcd6;
+  --code-block-bg: #0a0a0b;
+  --code-bg: #242428;
+  --border: #38383e;
+  --accent: #e0c775;
+  --accent-hover: #e8d490;
+  --accent-muted: #a89030;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+code, pre, kbd, .post-meta .post-status {
+  font-family: 'JetBrains Mono', 'Geist Mono', 'Fira Code', 'Cascadia Code', monospace;
+}
+
+.dark .post-content a,
+.dark .post-content a:hover {
+  color: var(--accent);
+  box-shadow: 0 1px 0 var(--accent-muted);
+}
+.dark .post-content a:hover { color: var(--accent-hover); }
+
+.dark .post-content blockquote { border-inline-start: 3px solid var(--accent-muted); }
+
+.dark .post-content h1, .dark .post-content h2 { color: var(--primary); }
+
+.dark .post-meta .post-status {
+  color: var(--accent);
+  border: 1px solid var(--accent-muted);
+  border-radius: 3px;
+  padding: 0 6px;
+  font-size: 12px;
+}
+
+.dark .post-content pre code { font-size: 12.5px; line-height: 1.55; }
+
+.dark .top-link, .dark .footer a:hover { color: var(--accent); }
+
+.dark .post-tags a, .dark .terms-tags a { background: var(--code-bg); }
+.dark .post-tags a:hover, .dark .terms-tags a:hover { background: var(--tertiary); color: var(--accent); }
+
+.dark .toc { background: var(--entry); border-color: var(--border); }
+
+.dark ::selection { background: var(--accent-muted); color: #131315; }
