@@ -5,6 +5,9 @@ status: 持续更新
 tags: [ai, pricing]
 ---
 
+> 各家 Agent 订阅的实付价、名义价和每小时燃烧速度。按月重算，持续更新。
+
+<!--more-->
 
 tl;dr²
 ```
