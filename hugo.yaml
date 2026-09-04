@@ -1,0 +1,36 @@
+baseURL: https://hnsr0327.github.io/
+locale: zh-CN
+title: hnsr0327
+theme: PaperMod
+enableRobotsTXT: true
+buildDrafts: false
+
+params:
+  defaultTheme: auto
+  ShowReadingTime: true
+  ShowShareButtons: false
+  ShowPostNavLinks: true
+  ShowCodeCopyButtons: true
+  ShowToc: true
+  homeInfoParams:
+    Title: hnsr0327
+    Content: 重新开始。
+
+menu:
+  main:
+    - name: Posts
+      url: /posts/
+      weight: 10
+    - name: Archives
+      url: /archives/
+      weight: 20
+    - name: Tags
+      url: /tags/
+      weight: 30
+
+outputs:
+  home: [HTML, RSS, JSON]
+
+markup:
+  highlight:
+    noClasses: false
